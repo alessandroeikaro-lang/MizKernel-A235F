@@ -320,8 +320,6 @@ include scripts/subarch.include
 # Default value for CROSS_COMPILE is not to prefix executables
 # Note: Some architectures assign CROSS_COMPILE in their arch/*/Makefile
 ARCH		?= $(SUBARCH)
-CROSS_COMPILE := $(srctree)/toolchain/aarch64-android-4.9-llvm/bin/aarch64-linux-android-
-export CROSS_COMPILE
 
 # Architecture as present in compile.h
 UTS_MACHINE 	:= $(ARCH)
@@ -387,9 +385,7 @@ READELF		= llvm-readelf
 OBJSIZE		= llvm-size
 STRIP		= llvm-strip
 else
-REAL_CC = $(srctree)/toolchain/clang-r416183b/bin/clang
-AS 			= $(CROSS_COMPILE)as
-export AS CROSS_COMPILE
+REAL_CC		= $(CROSS_COMPILE)gcc
 LD		= $(CROSS_COMPILE)ld
 AR		= $(CROSS_COMPILE)ar
 NM		= $(CROSS_COMPILE)nm
@@ -413,12 +409,7 @@ CHECK		= sparse
 
 # Use the wrapper for the compiler.  This wrapper scans for new
 # warnings and causes the build to stop upon encountering them
-# CC		= $(PYTHON) $(srctree)/scripts/gcc-wrapper.py $(REAL_CC) # This wrapper is broken and its related tools were deprecated, suggest move on to google's clang instead
-# CC = $(srctree)/toolchain/clang-r416183b/bin/clang
-CC = $(srctree)/toolchain/clang-r416183b/bin/clang
-
-
-
+CC		= $(PYTHON) $(srctree)/scripts/gcc-wrapper.py $(REAL_CC)
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void -Wno-unknown-attribute $(CF)
